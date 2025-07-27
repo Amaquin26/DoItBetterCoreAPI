@@ -28,6 +28,13 @@ namespace DoItBetterCoreAPI.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TodoTaskReadDto>>> GetAllUserOwned()
+        {
+            var tasks = await _todoTaskService.GetAllUserOwnedAsync(UserId);
+            return Ok(tasks);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoTaskReadDto>> GetById(int id)
         {

@@ -6,6 +6,7 @@ namespace DoItBetterCoreAPI.Services
     public interface ITodoTaskService
     {
         Task<IEnumerable<TodoTaskReadDto>> GetAllAsync(string userId);
+        Task<IEnumerable<TodoTaskReadDto>> GetAllUserOwnedAsync(string userId);
         Task<TodoTaskReadDto?> GetByIdAsync(int id, string userId);
         Task<int> AddAsync(TodoTaskWriteDto task, string userId);
         Task UpdateAsync(TodoTaskWriteDto task, string userId);

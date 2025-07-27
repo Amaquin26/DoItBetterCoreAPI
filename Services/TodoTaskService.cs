@@ -39,6 +39,34 @@ namespace DoItBetterCoreAPI.Services
             return taskDtos;
         }
 
+        public async Task<IEnumerable<TodoTaskReadDto>> GetAllUserOwnedAsync(string userId)
+        {
+            var tasks = await _todoTaskRepository.GetAllAsync();
+
+            // TODO: Make this more performant
+            var taskDtos = tasks
+            .Where(t => t.UserId == userId)    
+            .Select(task =>
+            new TodoTaskReadDto
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Subtitle = task.Subtitle,
+                Status = task.Status,
+                Group = task.Group?.Name,
+                DateCreated = task.DateCreated,
+                DateModified = task.DateModified,
+                EstimatedEndDate = task.EstimatedEndDate,
+                Progress = task.Progress,
+                TaskOwner = task.User?.FirstName + " " + task.User?.LastName,
+                GroupId = task.GroupId,
+                IsOwner = task.UserId == userId
+            })
+            .ToList();
+
+            return taskDtos;
+        }
+
         public async Task<TodoTaskReadDto?> GetByIdAsync(int id, string userId)
         {
             var task = await _todoTaskRepository.GetByIdAsync(id);
@@ -73,7 +101,7 @@ namespace DoItBetterCoreAPI.Services
             {
                 Title = taskDto.Title,
                 Subtitle = taskDto.Subtitle,
-                Status = "",
+                Status = "On Going",
                 GroupId = taskDto.GroupId,
                 EstimatedEndDate = taskDto.EstimatedEndDate,
                 Progress = 0,
@@ -109,6 +137,7 @@ namespace DoItBetterCoreAPI.Services
             existingTask.GroupId = taskDto.GroupId;
             existingTask.GroupId = taskDto.GroupId;
             existingTask.EstimatedEndDate = taskDto.EstimatedEndDate;
+            existingTask.DateModified = DateTime.UtcNow;
 
             await _todoTaskRepository.UpdateAsync(existingTask);
             await _todoTaskRepository.SaveChangesAsync();

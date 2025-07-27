@@ -51,6 +51,8 @@ namespace DoItBetterCoreAPI
             // Services
             builder.Services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
             builder.Services.AddScoped<ITodoTaskService, TodoTaskService>();
+            builder.Services.AddScoped<ITodoSubtaskRepository, TodoSubtaskRepository>();
+            builder.Services.AddScoped<ITodoSubtaskService, TodoSubtaskService>();
 
             // Services from Identity Core
             builder.Services
