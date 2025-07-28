@@ -47,8 +47,8 @@ namespace DoItBetterCoreAPI.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> ToggleCheck(int id)
         {
-            await _todoSubtaskService.CheckToggleAsync(id, UserId);
-            return NoContent();
+            var newProgress = await _todoSubtaskService.CheckToggleAsync(id, UserId);
+            return Ok(newProgress);
         }
 
         [HttpPost]

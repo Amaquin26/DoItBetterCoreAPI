@@ -1,5 +1,6 @@
 ﻿using DoItBetterCoreAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace DoItBetterCoreAPI.Repositories
 {
@@ -33,6 +34,13 @@ namespace DoItBetterCoreAPI.Repositories
             return await _context.TodoTasks
                                  .Where(t => !t.IsDeleted && t.UserId == userId)
                                  .ToListAsync();
+        }
+
+        public async Task<TodoTask?> GetTodoTaskWithSubtasks(int taskId)
+        {
+            return await _context.TodoTasks
+                .Include(t => t.SubTasks)
+                .FirstOrDefaultAsync(s => s.Id == taskId);
         }
 
         public async Task AddAsync(TodoTask task)

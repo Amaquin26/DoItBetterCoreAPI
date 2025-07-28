@@ -27,6 +27,14 @@ namespace DoItBetterCoreAPI.Repositories
                 .Where(t => !t.IsDeleted && t.TodoTaskId == taskId).ToListAsync();
         }
 
+        public async Task<IEnumerable<bool>> GetAllSubtasksStatus(int taskId)
+        {
+            return await _context.TodoSubtasks
+                .Where(t => !t.IsDeleted && t.TodoTaskId == taskId)
+                .Select(t => t.IsChecked)
+                .ToListAsync();
+        }
+
         public async Task<TodoSubtask?> GetByIdAsync(int id)
         {
             return await _context.TodoSubtasks

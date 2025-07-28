@@ -11,5 +11,6 @@ namespace DoItBetterCoreAPI.Services
         Task<int> AddAsync(TodoTaskWriteDto task, string userId);
         Task UpdateAsync(TodoTaskWriteDto task, string userId);
         Task DeleteAsync(int id, string userId);
+        Task<int> UpdateTaskProgressAsync(int id);
     }
 }

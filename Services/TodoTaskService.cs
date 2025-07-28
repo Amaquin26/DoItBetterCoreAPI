@@ -160,5 +160,27 @@ namespace DoItBetterCoreAPI.Services
             await _todoTaskRepository.DeleteAsync(existingTask);
             await _todoTaskRepository.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateTaskProgressAsync(int id)
+        {
+            var task = await _todoTaskRepository.GetTodoTaskWithSubtasks(id);
+
+            if (task == null)
+            {
+                throw new KeyNotFoundException($"Task with ID {id} not found.");
+            }
+
+            var subtasks = task.SubTasks.Where(s => !s.IsDeleted);
+            var length = subtasks?.Count() ?? 0;
+            var newProgress = subtasks == null || length == 0
+                ? 0
+                : (int)((subtasks.Count(s => s.IsChecked) / (double)length) * 100);
+
+            task.Progress = newProgress;
+
+            await _todoTaskRepository.UpdateAsync(task);
+            await _todoTaskRepository.SaveChangesAsync();
+            return task.Progress;
+        }
     }
 }

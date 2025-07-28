@@ -8,7 +8,7 @@ namespace DoItBetterCoreAPI.Extensions
         public static IServiceCollection InjectDbContext(this IServiceCollection services, IConfiguration config)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(config.GetConnectionString("DevDB")));
+                options.UseSqlServer(config.GetConnectionString("DockerDB")));
 
             return services;
         }

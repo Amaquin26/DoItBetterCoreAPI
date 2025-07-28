@@ -7,6 +7,7 @@ namespace DoItBetterCoreAPI.Repositories
         Task<IEnumerable<TodoSubtask>> GetAllAsync();
         Task<IEnumerable<TodoSubtask>> GetAllByTodoTaskIdAsync(int taskId);
         Task<TodoSubtask?> GetByIdAsync(int id);
+        Task<IEnumerable<bool>> GetAllSubtasksStatus(int taskId);
         Task AddAsync(TodoSubtask subtask);
         Task UpdateAsync(TodoSubtask subtask);
         Task DeleteAsync(TodoSubtask subtask);

@@ -9,10 +9,12 @@ namespace DoItBetterCoreAPI.Services
     public class TodoSubtaskService : ITodoSubtaskService
     {
         private readonly ITodoSubtaskRepository _todoSubtaskRepository;
+        private readonly ITodoTaskService _todoTaskService;
 
-        public TodoSubtaskService(ITodoSubtaskRepository todoSubtaskRepository)
+        public TodoSubtaskService(ITodoSubtaskRepository todoSubtaskRepository, ITodoTaskService todoTaskService)
         {
             _todoSubtaskRepository = todoSubtaskRepository;
+            _todoTaskService = todoTaskService;
         }
 
         public async Task<IEnumerable<TodoSubtaskReadDto>> GetAllAsync(string userId)
@@ -103,10 +105,13 @@ namespace DoItBetterCoreAPI.Services
 
             await _todoSubtaskRepository.AddAsync(subtask);
             await _todoSubtaskRepository.SaveChangesAsync();
+
+            var newProgress = await _todoTaskService.UpdateTaskProgressAsync(subtask.Id);
+
             return subtask.Id;
         }
 
-        public async Task CheckToggleAsync(int id, string userId)
+        public async Task<int> CheckToggleAsync(int id, string userId)
         {
             var existingSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
 
@@ -124,6 +129,10 @@ namespace DoItBetterCoreAPI.Services
 
             await _todoSubtaskRepository.UpdateAsync(existingSubtask);
             await _todoSubtaskRepository.SaveChangesAsync();
+
+            var newProgress = await _todoTaskService.UpdateTaskProgressAsync(existingSubtask.TodoTaskId);
+            return newProgress;
+
         }
 
         public async Task UpdateAsync(TodoSubtaskWriteDto subtaskDto, string userId)
@@ -170,6 +179,8 @@ namespace DoItBetterCoreAPI.Services
 
             await _todoSubtaskRepository.DeleteAsync(existingSubtask);
             await _todoSubtaskRepository.SaveChangesAsync();
+
+            var newProgress = await _todoTaskService.UpdateTaskProgressAsync(existingSubtask.TodoTaskId);
         }
     }
 }
